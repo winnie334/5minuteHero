@@ -1,7 +1,7 @@
 /// <reference path="./p5.global-mode.d.ts" />
 
 var framesLeft = 18000;
-
+var flexMeter = 0;
 
 function setup() {
   createCanvas(1000, 600);
@@ -13,12 +13,11 @@ function draw() {
   drawStatsPanel()
 }
 
-
-
 function drawStatsPanel() {
     //info panel
     fill(87, 167, 247);
-    rect(width - 250, 0, 250, 100);
+    strokeWeight(3)
+    rect(width - 250, 3, 247, 100);
     fill(0);
     textSize(30);
     // text("Timer until dad comes home", width - 250, 20);
@@ -30,4 +29,15 @@ function drawStatsPanel() {
     textSize(15)
     text("before dad finds out you're", width-178, 15)
     text("using his credit card", width-178, 30)
+
+    // FLEXMETER
+    fill(255)
+    rect(width-230, 50, 180, 20)
+    fill(120)
+    textStyle(ITALIC)
+    text("F  L  E  X   M  E  T  E  R", width - 225, 65)
+    textStyle(NORMAL)
+    strokeWeight(0)
+    fill(255, 100+frameCount%80, 120)
+    rect(width - 228, 52, map(mouseX, 0, width, 0, 176), 17)
 }
