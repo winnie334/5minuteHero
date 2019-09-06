@@ -1,21 +1,18 @@
 /// <reference path="./p5.global-mode.d.ts" />
-<<<<<<< HEAD
- buttonList = [[100, 100, 200, 100, console.log]] ;
-=======
-
+buttonList = [[100, 100, 200, 100, console.log]] ;
 var framesLeft = 18000;
 
-
->>>>>>> bbd1a664908093df9c32bccd016f2367c79c87e1
 function setup() {
   createCanvas(1000, 600);
 }
 
 function draw() {
-<<<<<<< HEAD
-  drawStatsPanel();
-  drawButton();
+  background(240, 240, 240)
+  framesLeft--;
+  drawStatsPanel()
+  drawButton()
 }
+
 function mousePressed() {
   for (val of buttonList) {
    if (mouseX >= val[0] && mouseX <= val[0] + val[2] && mouseY >= val[1] && mouseY <= val[1] + val[3])
@@ -29,28 +26,12 @@ function drawButton(){
     fill (0, 0, 255);
     rect(val[0], val[1], val[2], val[3]);
   }
-=======
-  background(240, 240, 240)
-  framesLeft--;
-  drawStatsPanel()
->>>>>>> bbd1a664908093df9c32bccd016f2367c79c87e1
 }
 
 
 
 function drawStatsPanel() {
     //info panel
-<<<<<<< HEAD
-    fill(189, 187, 187);
-    rect(width - 200, 0, 199, 100);
-    fill(255, 255, 255);
-    textSize(15);
-    text("Timer until dad comes home",width - 199, 20);
-    text("dollaridoos: 99999", width - 199, 40);
-    text("big flex comes  here", width - 199, 60);
-}
-
-=======
     fill(87, 167, 247);
     rect(width - 250, 0, 250, 100);
     fill(0);
@@ -65,4 +46,3 @@ function drawStatsPanel() {
     text("before dad finds out you're", width-178, 15)
     text("using his credit card", width-178, 30)
 }
->>>>>>> bbd1a664908093df9c32bccd016f2367c79c87e1
