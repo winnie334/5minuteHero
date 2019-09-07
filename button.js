@@ -8,7 +8,7 @@ function Button(coords, color, functionToCall, argument) {
     buttonList.push(this);
 
     this.drawButton = function() {
-        fill(this.color)
+        fill(this.color[0], this.color[1], this.color[2])
         rect(this.coords[0], this.coords[1], this.coords[2], this.coords[3])
     }
 
