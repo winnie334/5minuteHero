@@ -2,6 +2,8 @@
 buttonList = [];
 var flexMeter = 0; // max of 100%
 var allImages = []; // array of array containing all the pictures by rarity
+var currentlyOnButton = false; // set to true to change pointer
+let rpgFont; // onze megacoole totaal niet gestolen font
 
 var currentlyDisplaying; // todo gooi dit weg
 
@@ -10,6 +12,7 @@ const rarity = ["common", "uncommon", "rare", "legendary"]
 
 
 function preload() { // we load in all the images before showing the game
+  rpgFont = loadFont('Breathe Fire.otf');
   for (var i = 0; i < 4; i++) {
     var images = [] // all images for this rarity
     for (var imageIndex = 0; imageIndex <= imageAmounts[i]; imageIndex++) {
@@ -22,17 +25,26 @@ function preload() { // we load in all the images before showing the game
 function setup() {
   createCanvas(1000, 600);
   for (var i = 0; i < 4; i++) {
-    new Button([30+180*i, 300, 130, 30], [200, 100, 100], screenClicked, i)
+    new Button([30+180*i, 300, 130, 30], [54, 110, 216], [0, 0, 0], screenClicked, i)
+    new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], screenClicked, i)
   }
-  console.log(buttonList)
+  textFont(rpgFont);
 }
 
 function draw() {
-  background(240, 240, 240)
+  background(255, 0, 0)
+  fill(191, 211, 255) // Dit is onze background nu
+  rect(1, 1, width-253, height-3)
   drawScreens();
   drawStatsPanel();
   drawButtons();
+  fixPointer();
   if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
+}
+
+function fixPointer() {
+  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
+  currentlyOnButton = false;
 }
 
 function drawScreens() {
@@ -46,10 +58,10 @@ function drawScreens() {
 function drawStatsPanel() {
     //info panel
     push()
-    translate(width-250, 0)
-    fill(87, 167, 247);
+    translate(width-249, 0)
+    fill(232, 141, 37);
     strokeWeight(3)
-    rect(0, 3, 247, 100);
+    rect(0, 1, 247, 100);
     fill(0);
     textSize(30);
     var secondsLeft = Math.floor((18000-frameCount)/60)
@@ -60,14 +72,29 @@ function drawStatsPanel() {
 
     // FLEXMETER
     fill(255)
-    rect(20, 50, 180, 20)
+    beginShape();
+    vertex(20, 70);
+    vertex(248, 70);
+    vertex(248, 50);
+    vertex(30, 50);
+    vertex(20, 70);
+    endShape();
     fill(120)
     textStyle(ITALIC)
-    text("F  L  E  X   M  E  T  E  R", 25, 65)
-    textStyle(NORMAL)
+    text("F   L   E   X    M   E   T   E   R", 38, 65)
     strokeWeight(0)
     fill(255, 100+flexMeter*sin(frameCount/40), 0)
-    rect(22, 52, map(mouseX, 0, width, 0, 176), 17)
+    beginShape();
+    vertex(22, 68);
+    vertex(map(flexMeter, 0, 100, 22, 198), 68);
+    if (flexMeter > 5) {
+      vertex(map(flexMeter, 0, 100, 22, 198), 52);
+      vertex(30, 52);
+    } else {
+      vertex(map(flexMeter, 0, 100, 22, 198), map(flexMeter, 0, 5, 68, 52))
+    }
+    vertex(22, 69)
+    endShape();
     pop()
 }
 
@@ -75,6 +102,7 @@ function drawStatsPanel() {
 function screenClicked(screenNumber) {
   // for now fixen we gewoon instant een drop
   currentlyDisplaying = getDrop()[1]
+  flexMeter++
   currentlyDisplaying.resize(64, 64)
 }
 
@@ -96,7 +124,7 @@ function getDrop() {
 
 function mousePressed() {
   for (button of buttonList) {
-   button.checkClick()
+   if (button.inside()) button.callFunction()
   }
 }
 
