@@ -47,8 +47,9 @@ function setup() {
 function draw() {
   switch (gameState) {
     case "start":
-      gameState = "playing";
       drawStart();
+     // gameState = "playing";
+
       break;
 
     case "playing":
@@ -67,11 +68,34 @@ function draw() {
   if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
 }
 
+
+function fixPointer() {
+  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
+  currentlyOnButton = false;
+}
+
 function drawStart() {
+push();
+noStroke();
+background(177, 179, 177);
+textSize(40);
+textAlign(CENTER);
+text("Welcome to 5 minute flexer." , width *0.5, height * 0.3 );
+textSize(25)
+text("recently your adventuring guild has been increasing it's standards for it's members.",  width *0.5, (height * 0.3) + 40 );
+text("Unfortunately you do not meet them so go out into the and collect loot to fill your flexmeter",  width *0.5, height * 0.3 + 65);
+text("and collect currency, use this currency on upgrades to aquire loot faster.",  width *0.5, height * 0.3 + 90);
+textSize(20);
+text("-click Anywhere to start-", width *0.5, height * 0.3 + 110);
+pop();
+startGame();
 
 }
 
 function drawGame() {
+  background(255, 0, 0)
+  fill(191, 211, 255) // Dit is onze background nu
+  rect(1, 1, width-253, height-3)
   drawBackground();
   drawScreens();
   drawStatsPanel();
@@ -85,6 +109,11 @@ function drawWin() {
 
 function drawLose() {
 
+}
+function startGame(){
+  if (gameState == "start" && mouseIsPressed){
+    gameState = "playing";
+  }
 }
 
 function screenClicked(screenNumber) {
