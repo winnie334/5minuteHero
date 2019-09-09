@@ -78,8 +78,10 @@ textSize(25)
 text("recently your adventuring guild has been increasing it's standards for it's members.",  width *0.5, (height * 0.3) + 40 );
 text("Unfortunately you do not meet them so go out into the and collect loot to fill your flexmeter",  width *0.5, height * 0.3 + 65);
 text("and collect currency, use this currency on upgrades to aquire loot faster.",  width *0.5, height * 0.3 + 90);
-new Button([width * 0,5 - 20, height * 0.3 + 105, 40, 40], [224, 139, 41], [143, 85, 20], function(){gameState = "playing"}, );
+textSize(20);
+text("-click Anywhere to start-", width *0.5, height * 0.3 + 110);
 pop();
+startGame();
 
 }
 
@@ -100,6 +102,11 @@ function drawWin() {
 
 function drawLose() {
 
+}
+function startGame(){
+  if (gameState == "start" && mouseIsPressed){
+    gameState = "playing";
+  }
 }
 
 function screenClicked(screenNumber) {
