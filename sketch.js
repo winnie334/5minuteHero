@@ -36,8 +36,8 @@ function draw() {
   switch (gameState){
 
     case "start":
-      console.log("test")
-      gameState = "playing";
+      drawStart();
+     // gameState = "playing";
       break;
 
     case "playing":
@@ -59,11 +59,23 @@ function fixPointer() {
   currentlyOnButton = false;
 }
 
-function drawStart(){
+function drawStart() {
+push();
+noStroke();
+background(177, 179, 177);
+textSize(40);
+textAlign(CENTER);
+text("Welcome to 5 minute flexer." , width *0.5, height * 0.3 );
+textSize(25)
+text("recently your adventuring guild has been increasing it's standards for it's members.",  width *0.5, (height * 0.3) + 40 );
+text("Unfortunately you do not meet them so go out into the and collect loot to fill your flexmeter",  width *0.5, height * 0.3 + 65);
+text("and collect currency, use this currency on upgrades to aquire loot faster.",  width *0.5, height * 0.3 + 90);
+new Button([width * 0,5 - 20, height * 0.3 + 105, 40, 40], [224, 139, 41], [143, 85, 20], function(){gameState = "playing"}, );
+pop();
 
 }
 
-function drawGame(){
+function drawGame() {
   background(255, 0, 0)
   fill(191, 211, 255) // Dit is onze background nu
   rect(1, 1, width-253, height-3)
@@ -74,11 +86,11 @@ function drawGame(){
   if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
 }
 
-function drawWin(){
+function drawWin() {
 
 }
 
-function drawLose(){
+function drawLose() {
 
 }
 
