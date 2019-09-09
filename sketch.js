@@ -3,6 +3,7 @@ buttonList = [];
 var flexMeter = 0; // max of 100%
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
+var gameState = "start"; // set to start to display start screen, playing for game, and win or lose
 let rpgFont; // onze megacoole totaal niet gestolen font
 
 var currentlyDisplaying; // todo gooi dit weg
@@ -32,6 +33,37 @@ function setup() {
 }
 
 function draw() {
+  switch (gameState){
+
+    case "start":
+      console.log("test")
+      gameState = "playing";
+      break;
+
+    case "playing":
+      drawGame()
+      break;
+
+    case "win":
+      break;
+
+    case "lose":
+      break;
+  }
+
+}
+
+
+function fixPointer() {
+  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
+  currentlyOnButton = false;
+}
+
+function drawStart(){
+
+}
+
+function drawGame(){
   background(255, 0, 0)
   fill(191, 211, 255) // Dit is onze background nu
   rect(1, 1, width-253, height-3)
@@ -42,9 +74,12 @@ function draw() {
   if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
 }
 
-function fixPointer() {
-  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
-  currentlyOnButton = false;
+function drawWin(){
+
+}
+
+function drawLose(){
+
 }
 
 function drawScreens() {
@@ -70,7 +105,7 @@ function drawStatsPanel() {
     text("before dad finds out you're", 72, 15)
     text("using his credit card", 72, 30)
 
-    // FLEXMETER
+    // F L E X M E T E R
     fill(255)
     beginShape();
     vertex(20, 70);
