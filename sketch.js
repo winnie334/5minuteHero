@@ -75,21 +75,20 @@ function fixPointer() {
 }
 
 function drawStart() {
-push();
-noStroke();
-background(177, 179, 177);
-textSize(40);
-textAlign(CENTER);
-text("Welcome to 5 minute flexer." , width *0.5, height * 0.3 );
-textSize(25)
-text("recently your adventuring guild has been increasing it's standards for it's members.",  width *0.5, (height * 0.3) + 40 );
-text("Unfortunately you do not meet them so go out into the and collect loot to fill your flexmeter",  width *0.5, height * 0.3 + 65);
-text("and collect currency, use this currency on upgrades to aquire loot faster.",  width *0.5, height * 0.3 + 90);
-textSize(20);
-text("-click Anywhere to start-", width *0.5, height * 0.3 + 110);
-pop();
-startGame();
-
+  push();
+  noStroke();
+  background(177, 179, 177);
+  textSize(40);
+  textAlign(CENTER);
+  text("Welcome to 5 minute flexer." , width *0.5, height * 0.3 );
+  textSize(25)
+  text("recently your adventuring guild has been increasing its standards for its members.",  width *0.5, (height * 0.3) + 40 );
+  text("Unfortunately you do not meet them so go out into the world and collect loot to fill your flexmeter",  width *0.5, height * 0.3 + 65);
+  text("and collect currency, use this currency on upgrades to aquire loot faster.",  width *0.5, height * 0.3 + 90);
+  textSize(20);
+  text("-click Anywhere to start-", width *0.5, height * 0.3 + 130);
+  pop();
+  startGame();
 }
 
 function drawGame() {
