@@ -1,4 +1,5 @@
 /// <reference path="./p5.global-mode.d.ts" />
+var inventory = [];
 var upgradeButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
@@ -99,7 +100,9 @@ function drawGame() {
   drawScreens();
   drawStatsPanel();
   drawButtons();
+  drawInventory();
   fixPointer();
+ 
 }
 
 function drawWin() {
@@ -117,8 +120,10 @@ function startGame(){
 
 function screenClicked(screenNumber) {
   // for now fixen we gewoon instant een drop
-  currentlyDisplaying = getDrop()[1]
+  if (inventory.length <= 20){
+  inventory.push(getDrop()[1]);
   flexMeter++
+  }
 }
 
 function getDrop() {
@@ -137,10 +142,7 @@ function getDrop() {
   return [tier, allImages[tier][Math.floor(Math.random()*allImages[tier].length)]];
 }
 
-function fixPointer() {
-  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
-  currentlyOnButton = false;
-}
+
 
 function mousePressed() {
   for (var button of upgradeButtons) {
@@ -169,6 +171,16 @@ function drawScreens() {
   for (var screen of screenList) {
     screen.drawScreen();
   }
+}
+
+function drawInventory() {
+  for (var i = 0; i < 10; i++) {
+    push();
+    fill(255,0,0);
+    rect(50*i + 10*i + 40, height-100,50,50);
+    rect(50*i + 10*i +40, height- 200,50,50);
+    pop();
+  }  
 }
 
 function drawStatsPanel() {
