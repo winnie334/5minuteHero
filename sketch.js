@@ -3,6 +3,7 @@ var upgradeButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
+var gameState = "start"; // set to start to display start screen, playing for game, and win or lose
 let rpgFont; // onze megacoole totaal niet gestolen font
 
 var currentlyDisplaying; // todo gooi dit weg
@@ -37,17 +38,46 @@ function setup() {
 }
 
 function draw() {
+  switch (gameState) {
+    case "start":
+      gameState = "playing";
+      drawStart();
+      break;
+
+    case "playing":
+      drawGame();
+      break;
+
+    case "win":
+      drawWin();
+      break;
+
+    case "lose":
+      drawLose();
+      break;
+  }
+
+  if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
+}
+
+function drawStart() {
+
+}
+
+function drawGame() {
   drawBackground();
   drawScreens();
   drawStatsPanel();
   drawButtons();
   fixPointer();
-  if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
 }
 
-function fixPointer() {
-  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
-  currentlyOnButton = false;
+function drawWin() {
+
+}
+
+function drawLose() {
+
 }
 
 function screenClicked(screenNumber) {
@@ -71,6 +101,11 @@ function getDrop() {
   }
   // todo verhoog flexmeter of coins, fix nog wat andere dingen
   return [tier, allImages[tier][Math.floor(Math.random()*allImages[tier].length)]];
+}
+
+function fixPointer() {
+  currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
+  currentlyOnButton = false;
 }
 
 function mousePressed() {
