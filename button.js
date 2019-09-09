@@ -1,12 +1,11 @@
-function Button(coords, color, strokeColor, functionToCall, argument) {
+function Button(coords, color, strokeColor, functionToCall, argument, type) {
 
     this.coords = coords;
     this.color = color;
     this.strokeColor = strokeColor;
     this.functionToCall = functionToCall;
     this.argument = argument;
-
-    buttonList.push(this);
+    this.type = type; // 0 is normal, 1 is buybutton, 2 is unbox
 
     this.drawButton = function() {
         push();
@@ -26,6 +25,14 @@ function Button(coords, color, strokeColor, functionToCall, argument) {
     }
 
     this.callFunction = function() {
-        this.functionToCall(this.argument)
+        switch (this.type) {
+            case 0:
+                this.functionToCall(this.argument);
+            case 1:
+                this.functionToCall.buy();
+            case 2:
+                this.functionToCall.unbox();
+        }
+       
     }
 }
