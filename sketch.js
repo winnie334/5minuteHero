@@ -3,11 +3,12 @@ var upgradeButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
-var gameState = "start"; // set to start to display start screen, playing for game, and win or lose
+var gameState = "playing"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
 
 let rpgFont; // onze megacoole totaal niet gestolen font
 let chestImages = [];
 let coinImage;
+let upgradeImages = [];
 
 var currentlyDisplaying; // todo gooi dit weg
 
@@ -23,9 +24,13 @@ const rarity = ["common", "uncommon", "rare", "legendary"]
 function preload() { // we load in all the images before showing the game
   rpgFont = loadFont('Breathe Fire.otf');
   coinImage = loadImage("images/coin.png");
+
+  upgradeImages.push(loadImage("images/flexM.png"))
+
   for (var i = 0; i < 14; i++) {
     chestImages.push(loadImage("images/chestL/chest"+i+".png"))
   }
+
   for (var i = 0; i < 4; i++) {
     var images = [] // all images for this rarity
     for (var imageIndex = 0; imageIndex <= imageAmounts[i]; imageIndex++) {
@@ -38,7 +43,7 @@ function preload() { // we load in all the images before showing the game
 function setup() {
   createCanvas(1000, 600);
   for (var i = 0; i < 4; i++) {
-    upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], screenClicked, i, 0))
+    upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], buyUpgrade, i, 0))
     screenList.push(new Screen([20 + 180*i, 30, 150, 300], i == 0, 50 * Math.pow(2, i)))
   }
   textFont(rpgFont);
@@ -92,13 +97,11 @@ function drawStart() {
 }
 
 function drawGame() {
-  background(255, 0, 0)
-  fill(191, 211, 255) // Dit is onze background nu
-  rect(1, 1, width-253, height-3)
   drawBackground();
   drawScreens();
   drawStatsPanel();
   drawButtons();
+  drawUpgrades();
   fixPointer();
 }
 
@@ -109,6 +112,7 @@ function drawWin() {
 function drawLose() {
 
 }
+
 function startGame(){
   if (gameState == "start" && mouseIsPressed){
     gameState = "playing";
@@ -151,6 +155,21 @@ function mousePressed() {
   }
 }
 
+// here goes all upgrade balancing
+function getUpgradePrice(upgradeNumber) {
+  switch (upgradeNumber) {
+    case 0:
+      return Math.floor(50 * Math.pow(1.27, (1 + upgradesBought[0])));
+  }
+}
+
+function buyUpgrade(upgradeNumber) {
+  if (getUpgradePrice(upgradeNumber) < coins) {
+    coins -= getUpgradePrice(upgradeNumber);
+    upgradesBought[upgradeNumber]++;
+  }
+}
+
 function drawBackground() {
   background(255, 0, 0)
   fill(191, 211, 255) // Dit is onze background nu
@@ -183,8 +202,8 @@ function drawStatsPanel() {
   var secondsLeft = Math.floor((18000-frameCount)/60)
   text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 10, 30)
   textSize(15)
-  text("before you're kicked out", 72, 15)
-  text("of the guild", 72, 30)
+  text("before you're kicked", 72, 15)
+  text("out of the guild", 72, 30)
 
   fill(198, 116, 21)
   strokeWeight(0);
@@ -213,7 +232,7 @@ function drawStatsPanel() {
   endShape();
   fill(120)
   textStyle(ITALIC)
-  text("F   L   E   X    M   E   T   E   R", 38, 65)
+  text("F   L   E   X       M   E   T   E   R", 40, 65)
   strokeWeight(0)
   fill(255, 100+flexMeter*sin(frameCount/40), 0)
   beginShape();
@@ -228,4 +247,25 @@ function drawStatsPanel() {
   vertex(22, 69)
   endShape();
   pop()
+}
+
+function drawUpgrades() {
+  push();
+  translate(width-247, 201)
+  fill(240);
+  stroke(100, 60, 20);
+  strokeWeight(5);
+  rect(10, 10, 73, 73)
+  image(upgradeImages[0], 12, 14)
+  fill(0);
+  noStroke();
+  textSize(20)
+  text("Grow muscles to", 90, 25)
+  text("open chests faster!", 90, 45)
+  image(coinImage, 90, 54, 24, 30)
+  textSize(25)
+  text(getUpgradePrice(0), 120, 77)
+  textSize(21)
+  text("Lv. " + upgradesBought[0], 236-textWidth("Lv. " + upgradesBought[0]), 77)
+  pop();
 }

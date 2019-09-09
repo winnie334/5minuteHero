@@ -6,6 +6,10 @@ function Screen(coords, unlocked, price) {
     this.animationFrame = 0;
     this.currentDrop = null;
 
+    this.buyButton = new Button([10 + coords[0], this.coords[1] + 120, this.coords[2] - 20, this.coords[3] - 270], [54, 110, 216], [0, 0, 0], this, null, 1)
+    this.unboxButton = new Button([10 + coords[0], this.coords[1] + 270, this.coords[2] - 20, this.coords[3] - 270], [54, 110, 216], [0, 0, 0], this, null, 2)
+
+
     this.drawScreen = function() {
         push();
         strokeWeight(3);
@@ -13,10 +17,28 @@ function Screen(coords, unlocked, price) {
             fill(200, 200, 255);
             rect(coords[0], coords[1], coords[2], coords[3])
             this.unboxButton.drawButton();
+            fill(240);
+            textAlign(CENTER);
+            textSize(23);
+            if (this.animationFrame == 0)
+                text("Open !", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
+            else if (this.animationFrame == fullAnimation)
+                text("Collect", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
+            else
+            text("Opening...", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
         } else {
-            fill(100);
+            fill(70);
             rect(coords[0], coords[1], coords[2], coords[3])
             this.buyButton.drawButton();
+            image(coinImage, 45 + coords[0], 124.5 + coords[1], 18, 22)
+            fill(240);
+            textSize(20);
+            text(this.price, coords[0] + 70, coords[1] + 143)
+            textAlign(CENTER);
+            textSize(23)
+            text("Buy an extra", coords[0] + coords[2] / 2, coords[1] + 40)
+            text("chest room", coords[0] + coords[2] / 2, coords[1] + 60)
+            text("today !", coords[0] + coords[2] / 2, coords[1] + 80)
         }
         this.drawAnimation();
         pop();
@@ -31,8 +53,8 @@ function Screen(coords, unlocked, price) {
     }
 
     const unboxFrames = 300;
-    const itemShowFrames = 600;
-    const fullAnimation = 601;
+    const itemShowFrames = 420;
+    const fullAnimation = 421;
 
     this.drawAnimation = function() {
         if (!this.unlocked) return;
@@ -54,7 +76,8 @@ function Screen(coords, unlocked, price) {
 
 
             // trust dat dit werkt
-            if (this.animationFrame != fullAnimation) this.animationFrame += 1 + upgradesBought[1] / 2;
+            if (this.animationFrame != fullAnimation && this.animationFrame < unboxFrames) this.animationFrame += 1 + upgradesBought[0] / 2;
+            else if (this.animationFrame != fullAnimation) this.animationFrame += 1;
             if (this.animationFrame > fullAnimation) this.animationFrame = fullAnimation;
         }
     }
@@ -69,8 +92,4 @@ function Screen(coords, unlocked, price) {
         if (this.unlocked) {if (this.unboxButton.inside()) this.unboxButton.callFunction();}
         else if (this.buyButton.inside()) this.buyButton.callFunction();
     }
-
-    this.buyButton = new Button([10 + coords[0], this.coords[1] + 120, this.coords[2] - 20, this.coords[3] - 270], [54, 110, 216], [0, 0, 0], this, null, 1)
-    this.unboxButton = new Button([10 + coords[0], this.coords[1] + 270, this.coords[2] - 20, this.coords[3] - 270], [54, 110, 216], [0, 0, 0], this, null, 2)
-
 }
