@@ -4,13 +4,16 @@ var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
 var gameState = "start"; // set to start to display start screen, playing for game, and win or lose
+
 let rpgFont; // onze megacoole totaal niet gestolen font
+let chestImages = [];
+let coinImage;
 
 var currentlyDisplaying; // todo gooi dit weg
 
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
-var coins = 0; // todo mss een start amount geven?
+var coins = 123; // todo mss een start amount geven?
 var upgradesBought = [0, 0, 0, 0];
 
 const imageAmounts = [87, 37, 14, 6];
@@ -19,6 +22,10 @@ const rarity = ["common", "uncommon", "rare", "legendary"]
 
 function preload() { // we load in all the images before showing the game
   rpgFont = loadFont('Breathe Fire.otf');
+  coinImage = loadImage("images/coin.png");
+  for (var i = 0; i < 14; i++) {
+    chestImages.push(loadImage("images/chestL/chest"+i+".png"))
+  }
   for (var i = 0; i < 4; i++) {
     var images = [] // all images for this rarity
     for (var imageIndex = 0; imageIndex <= imageAmounts[i]; imageIndex++) {
@@ -84,7 +91,6 @@ function screenClicked(screenNumber) {
   // for now fixen we gewoon instant een drop
   currentlyDisplaying = getDrop()[1]
   flexMeter++
-  currentlyDisplaying.resize(64, 64)
 }
 
 function getDrop() {
@@ -143,16 +149,32 @@ function drawStatsPanel() {
   translate(width-249, 0)
   fill(232, 141, 37);
   strokeWeight(3)
-  rect(0, 1, 247, 100);
+  rect(0, 1, 247, 140);
   fill(0);
   textSize(30);
   var secondsLeft = Math.floor((18000-frameCount)/60)
   text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 10, 30)
   textSize(15)
-  text("before dad finds out you're", 72, 15)
-  text("using his credit card", 72, 30)
+  text("before you're kicked out", 72, 15)
+  text("of the guild", 72, 30)
+
+  fill(198, 116, 21)
+  strokeWeight(0);
+  rect(10, 80, 60 + textWidth(str(coins)) * 2.5, 53)
+  fill(0);
+  strokeWeight(3)
+
+  image(coinImage, 15, 85)
+  textSize(40);
+  text(coins, 60, 120)
+
+  fill(224, 139, 41);
+  rect(0, 141, 247, 55)
+  fill(0)
+  text("Upgrades", 55, 180)
 
   // FLEXMETER
+  textSize(15)
   fill(255)
   beginShape();
   vertex(20, 70);

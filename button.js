@@ -25,14 +25,19 @@ function Button(coords, color, strokeColor, functionToCall, argument, type) {
     }
 
     this.callFunction = function() {
-        switch (this.type) {
-            case 0:
-                this.functionToCall(this.argument);
-            case 1:
-                this.functionToCall.buy();
-            case 2:
-                this.functionToCall.unbox();
-        }
+        try {
+            switch (this.type) {
+                case 0:
+                    this.functionToCall(this.argument);
+                    break;
+                case 1:
+                    this.functionToCall.buy();
+                    break;
+                case 2:
+                    this.functionToCall.unbox();
+                    break;
+            }
+        } catch (err) {}
        
     }
 }
