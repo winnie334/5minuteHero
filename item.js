@@ -22,9 +22,6 @@ function Item(tier, itemImage, startPos) {
             this.curPos[0] = this.curPos[0] + (this.endPos[0] - this.curPos[0]) / 8
             this.curPos[1] = this.curPos[1] + (this.endPos[1] - this.curPos[1]) / 8
             var imageSize = map(this.curPos[0], this.startPos[0], this.endPos[0], 64, this.endSize)
-            // console.log("start: " + this.startPos[0])
-            // console.log("end: " + this.endPos[0])
-            // console.log("cur: " + this.curPos[0])
             if (Math.abs(this.curPos[0] - this.endPos[0]) < 1 && Math.abs(this.curPos[1] - this.endPos[1]) < 1) {
                 this.curPos = this.endPos;
                 this.isMoving = false;

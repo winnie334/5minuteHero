@@ -28,6 +28,7 @@ function preload() { // we load in all the images before showing the game
   coinImage = loadImage("images/coin.png");
 
   upgradeImages.push(loadImage("images/flexM.png"))
+  upgradeImages.push(loadImage("images/backpack.png"))
 
   for (var i = 0; i < 14; i++) {
     chestImages.push(loadImage("images/chestL/chest"+i+".png"))
@@ -155,6 +156,12 @@ function getUpgradePrice(upgradeNumber) {
   switch (upgradeNumber) {
     case 0:
       return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
+    case 1:
+      return Math.floor(60 * Math.pow(1.5, (upgradesBought[1])));
+    case 2:
+      return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
+    case 3:
+      return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
   }
 }
 
@@ -270,20 +277,36 @@ function drawStatsPanel() {
 function drawUpgrades() {
   push();
   translate(width-247, 201)
-  fill(240);
-  stroke(100, 60, 20);
-  strokeWeight(5);
-  rect(10, 10, 73, 73)
+
+  for (var i = 0; i < upgradeImages.length; i++) {
+    fill(240);
+    stroke(100, 60, 20);
+    strokeWeight(5);
+    rect(10, 10 + 100*i, 73, 73)
+
+    fill(0);
+    noStroke();
+    image(coinImage, 90, 54+100*i, 24, 30)
+    textSize(25)
+    text(getUpgradePrice(i), 120, 77+100*i)
+    textSize(21)
+    text("Lv. " + upgradesBought[i], 236-textWidth("Lv. " + upgradesBought[i]), 77+100*i)
+  }
+
+  // muscle
   image(upgradeImages[0], 12, 14)
-  fill(0);
-  noStroke();
   textSize(20)
   text("Grow muscles to", 90, 25)
   text("open chests faster!", 90, 45)
-  image(coinImage, 90, 54, 24, 30)
-  textSize(25)
-  text(getUpgradePrice(0), 120, 77)
-  textSize(21)
-  text("Lv. " + upgradesBought[0], 236-textWidth("Lv. " + upgradesBought[0]), 77)
+  
+  // backpack
+  translate(0, 100);
+  image(upgradeImages[1], 15, 15)
+  fill(0);
+  noStroke();
+  textSize(20)
+  text("Expand backpack", 90, 25)
+  text("to keep more items!", 90, 45)
+
   pop();
 }

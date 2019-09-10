@@ -39,8 +39,7 @@ function Screen(coords, unlocked, price) {
             textAlign(CENTER);
             textSize(23)
             text("Buy an extra", coords[0] + coords[2] / 2, coords[1] + 40)
-            text("chest room", coords[0] + coords[2] / 2, coords[1] + 60)
-            text("today !", coords[0] + coords[2] / 2, coords[1] + 80)
+            text("chest room !", coords[0] + coords[2] / 2, coords[1] + 60)
         }
         this.drawAnimation();
         pop();
@@ -96,16 +95,12 @@ function Screen(coords, unlocked, price) {
         this.animationFrame = 1;
     }
 
-    this.collect = function() {
-        
+    this.collect = function() {     
         if (inventory.indexOf(null) != -1) {
             var collectedItem = new Item(this.currentDrop[0], this.currentDrop[1], [coords[0] + coords[2] / 2 - 32, coords[1] + 35])
             inventory[inventory.indexOf(null)] = collectedItem;
             this.animationFrame++; 
-         } else return;
-
-
-       
+         } else return;  
     }
 
     this.checkClick = function() {
