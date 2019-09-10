@@ -162,6 +162,7 @@ function getUpgradePrice(upgradeNumber) {
     case 0:
       return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
     case 1:
+      if (upgradesBought[1] == 8) return "MAX"
       return Math.floor(60 * Math.pow(1.5, (upgradesBought[1])));
     case 2:
       return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
@@ -213,6 +214,9 @@ function drawInventory() {
   // maar de reden hiervoor is dat nu ALLE squares worden getekend, dan ALLE items, en dan ALLE overlays
   // als ik 1 per 1 deed zou het kunnen dat een item "achter" een square kwam te zitten tijdens zijn animatie
   push();
+  textSize(30);
+  fill(0);
+  text("INVENTORY", 284, 365)
   for (var i = 0; i < inventory.length; i++) {
     coord = [40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8)]
     if (inventory[i] == null) fill(198, 116, 21);

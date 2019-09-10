@@ -80,7 +80,7 @@ function Screen(coords, unlocked, price) {
 
 
             // trust dat dit werkt
-            if (this.animationFrame < unboxFrames) this.animationFrame += 1 + upgradesBought[0] / 2;
+            if (this.animationFrame < unboxFrames) {this.animationFrame += 1 + upgradesBought[0] / 2; if (this.animationFrame > itemShowFrames) this.animationFrame = unboxFrames}
             else if (this.animationFrame <= itemShowFrames) this.animationFrame = Math.floor(this.animationFrame + 1)
             else if (this.animationFrame == waitFrame) {} // pass
             else if (this.animationFrame < closingFrames) this.animationFrame++;
