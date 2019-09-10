@@ -155,7 +155,7 @@ function getUpgradePrice(upgradeNumber) {
     case 0:
       return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
     case 1:
-      return Math.floor(60 * Math.pow(1.5, (upgradesBought[0])));
+      return Math.floor(60 * Math.pow(1.5, (upgradesBought[1])));
     case 2:
       return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
     case 3:
