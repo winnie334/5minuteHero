@@ -10,12 +10,11 @@ let chestImages = [];
 let coinImage;
 let upgradeImages = [];
 
-var currentlyDisplaying; // todo gooi dit weg
-
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
-var coins = 123; // todo mss een start amount geven?
+var coins = 12003; // todo mss een start amount geven?
 var upgradesBought = [0, 0, 0, 0];
+var allItems = []; // replace dit met inventory of zo
 
 const imageAmounts = [87, 37, 14, 6];
 const rarity = ["common", "uncommon", "rare", "legendary"]
@@ -43,7 +42,7 @@ function preload() { // we load in all the images before showing the game
 function setup() {
   createCanvas(1000, 600);
   for (var i = 0; i < 4; i++) {
-    upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], buyUpgrade, i, 0))
+    upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], buyUpgrade, i))
     screenList.push(new Screen([20 + 180*i, 30, 150, 300], i == 0, 50 * Math.pow(2, i)))
   }
   textFont(rpgFont);
@@ -70,7 +69,6 @@ function draw() {
       break;
   }
 
-  if (currentlyDisplaying) image(currentlyDisplaying, 400, 400)
 }
 
 
@@ -101,6 +99,7 @@ function drawGame() {
   drawScreens();
   drawStatsPanel();
   drawButtons();
+  drawItems();
   drawUpgrades();
   fixPointer();
 }
@@ -117,12 +116,6 @@ function startGame(){
   if (gameState == "start" && mouseIsPressed){
     gameState = "playing";
   }
-}
-
-function screenClicked(screenNumber) {
-  // for now fixen we gewoon instant een drop
-  currentlyDisplaying = getDrop()[1]
-  flexMeter++
 }
 
 function getDrop() {
@@ -159,7 +152,7 @@ function mousePressed() {
 function getUpgradePrice(upgradeNumber) {
   switch (upgradeNumber) {
     case 0:
-      return Math.floor(50 * Math.pow(1.27, (1 + upgradesBought[0])));
+      return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
   }
 }
 
@@ -187,6 +180,12 @@ function drawButtons() {
 function drawScreens() {
   for (var screen of screenList) {
     screen.drawScreen();
+  }
+}
+
+function drawItems() {
+  for (var item of allItems) {
+    item.update();
   }
 }
 
