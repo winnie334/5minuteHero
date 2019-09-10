@@ -6,6 +6,7 @@ function Item(tier, itemImage, startPos) {
     this.isMoving = true;
 
     // very advanced algorithms
+    //spaghet
     this.moneyValue = Math.floor(10*Math.floor(random(Math.pow(2, this.tier), Math.pow(3, this.tier))+random(Math.pow(2, this.tier), Math.pow(3, this.tier))) + random(-10, 10))
     this.flexValue = Math.pow(2, this.tier);
     flexMeter += this.flexValue;
