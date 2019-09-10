@@ -1,5 +1,5 @@
 /// <reference path="./p5.global-mode.d.ts" />
-var inventory = [];
+var inventory = [null, null, null, null, null, null, null, null, null];
 var upgradeButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
@@ -10,12 +10,14 @@ let rpgFont; // onze megacoole totaal niet gestolen font
 let chestImages = [];
 let coinImage;
 let upgradeImages = [];
+let colorList;
 
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
 var coins = 12003; // todo mss een start amount geven?
 var upgradesBought = [0, 0, 0, 0];
 var allItems = []; // replace dit met inventory of zo
+
 
 const imageAmounts = [87, 37, 14, 6];
 const rarity = ["common", "uncommon", "rare", "legendary"]
@@ -41,6 +43,7 @@ function preload() { // we load in all the images before showing the game
 }
 
 function setup() {
+  rarityColor = [color(232, 235, 233), color(30, 150, 70), color(127, 10, 145), color(227, 180, 25)];
   createCanvas(1000, 600);
   for (var i = 0; i < 4; i++) {
     upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], buyUpgrade, i))
@@ -72,7 +75,6 @@ function draw() {
 
 }
 
-
 function fixPointer() {
   currentlyOnButton ? document.body.style.cursor = 'pointer' : document.body.style.cursor = 'default';
   currentlyOnButton = false;
@@ -100,6 +102,7 @@ function drawGame() {
   drawScreens();
   drawStatsPanel();
   drawButtons();
+  drawInventory();
   drawItems();
   drawUpgrades();
   fixPointer();
@@ -117,14 +120,6 @@ function drawLose() {
 function startGame(){
   if (gameState == "start" && mouseIsPressed){
     gameState = "playing";
-  }
-}
-
-function screenClicked(screenNumber) {
-  // for now fixen we gewoon instant een drop
-  if (inventory.length <= 20){
-  inventory.push(getDrop()[1]);
-  flexMeter++
   }
 }
 
@@ -193,6 +188,23 @@ function drawScreens() {
 function drawItems() {
   for (var item of allItems) {
     item.update();
+  }
+}
+
+function drawInventory() {
+
+  for (var i = 0; i < inventory.length; i++) {
+    push();
+    if (inventory[i] == null) {
+      fill(198, 116, 21);
+
+    } else {
+      fill(rarityColor[inventory[i].tier], rarityColor[inventory[i].tier], rarityColor[inventory[i].tier]);
+     
+    }
+
+     rect(40 + 80*(i - 8*(i>=8)), height - 120 - 100*(i>=8), 70, 70);
+    pop();
   }
 }
 

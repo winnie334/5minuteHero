@@ -97,8 +97,15 @@ function Screen(coords, unlocked, price) {
     }
 
     this.collect = function() {
-        var collectedItem = new Item(this.currentDrop[0], this.currentDrop[1], [coords[0] + coords[2] / 2 - 32, coords[1] + 35])
-        this.animationFrame++; 
+        
+        if (inventory.indexOf(null) != -1) {
+            var collectedItem = new Item(this.currentDrop[0], this.currentDrop[1], [coords[0] + coords[2] / 2 - 32, coords[1] + 35])
+            inventory[inventory.indexOf(null)] = collectedItem;
+            this.animationFrame++; 
+         } else return;
+
+
+       
     }
 
     this.checkClick = function() {
