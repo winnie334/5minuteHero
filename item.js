@@ -15,8 +15,6 @@ function Item(tier, itemImage, startPos) {
     this.endPos = [random(22, 700), random(386, 573)];
     this.endSize = 40;
 
-    allItems.push(this);
-
     this.update = function() {
         if (this.isMoving) {
             this.curPos[0] = this.curPos[0] + (this.endPos[0] - this.curPos[0]) / 8

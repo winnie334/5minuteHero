@@ -1,6 +1,7 @@
 /// <reference path="./p5.global-mode.d.ts" />
-var inventory = [null, null, null, null, null, null, null, null, null];
+var inventory = [null, null, null, null, null, null, null, null];
 var upgradeButtons = [];
+var sellButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
@@ -16,8 +17,6 @@ let colorList;
 var flexMeter = 0; // max of 100%
 var coins = 12003; // todo mss een start amount geven?
 var upgradesBought = [0, 0, 0, 0];
-var allItems = []; // replace dit met inventory of zo
-
 
 const imageAmounts = [87, 37, 14, 6];
 const rarity = ["common", "uncommon", "rare", "legendary"]
@@ -49,6 +48,11 @@ function setup() {
   for (var i = 0; i < 4; i++) {
     upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], buyUpgrade, i))
     screenList.push(new Screen([20 + 180*i, 30, 150, 300], i == 0, 50 * Math.pow(2, i)))
+  }
+
+  for (var i = 0; i < 16; i++) {
+    // todo laat coords matchen met 64x64 inventory
+    sellButtons.push(new Button([40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8), 70, 70], [0, 0, 0], [0, 0, 0], sellItem, i))
   }
   textFont(rpgFont);
 }
@@ -104,7 +108,6 @@ function drawGame() {
   drawStatsPanel();
   drawButtons();
   drawInventory();
-  drawItems();
   drawUpgrades();
   fixPointer();
  
@@ -140,7 +143,9 @@ function getDrop() {
   return [tier, allImages[tier][Math.floor(Math.random()*allImages[tier].length)]];
 }
 
-
+function sellItem(invIndex) {
+  // todo
+}
 
 function mousePressed() {
   for (var button of upgradeButtons) {
@@ -167,6 +172,10 @@ function getUpgradePrice(upgradeNumber) {
 
 function buyUpgrade(upgradeNumber) {
   if (getUpgradePrice(upgradeNumber) < coins) {
+    if (upgradeNumber == 1) {
+      if (inventory.length >= 16) return;
+      inventory.push(null);
+    } 
     coins -= getUpgradePrice(upgradeNumber);
     upgradesBought[upgradeNumber]++;
   }
@@ -181,9 +190,16 @@ function drawBackground() {
 }
 
 function drawButtons() {
+  push();
   for (var button of upgradeButtons) {
     button.drawButton()
   }
+  for (var i = 0; i < inventory.length; i++) {
+    if (inventory[i] == null) continue;
+    var button = sellButtons[i];
+    button.drawButton();
+  }
+  pop();
 }
 
 function drawScreens() {
@@ -192,27 +208,35 @@ function drawScreens() {
   }
 }
 
-function drawItems() {
-  for (var item of allItems) {
-    item.update();
-  }
-}
-
 function drawInventory() {
+  // oke dit zit er probably retarded uit omdat ik 3 keer dingen doe in exact dezelfde loop
+  // maar de reden hiervoor is dat nu ALLE squares worden getekend, dan ALLE items, en dan ALLE overlays
+  // als ik 1 per 1 deed zou het kunnen dat een item "achter" een square kwam te zitten tijdens zijn animatie
+  push();
+  for (var i = 0; i < inventory.length; i++) {
+    coord = [40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8)]
+    if (inventory[i] == null) fill(198, 116, 21);
+    else fill(rarityColor[inventory[i].tier]);
+    rect(coord[0], coord[1], 70, 70)
+  }
 
   for (var i = 0; i < inventory.length; i++) {
-    push();
-    if (inventory[i] == null) {
-      fill(198, 116, 21);
-
-    } else {
-      fill(rarityColor[inventory[i].tier], rarityColor[inventory[i].tier], rarityColor[inventory[i].tier]);
-     
-    }
-
-     rect(40 + 80*(i - 8*(i>=8)), height - 120 - 100*(i>=8), 70, 70);
-    pop();
+    if (inventory[i] != null) inventory[i].update();
   }
+
+  for (var i = 0; i < inventory.length; i++) {
+    coord = [40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8)]
+    if (sellButtons[i].inside() && inventory[i] != null) {
+      fill(0, 0, 0, 120);
+      rect(coord[0], coord[1], 70, 70)
+      fill(255)
+      textSize(23)
+      text('SELL', coord[0] + 13, coord[1]+25)
+      image(coinImage, coord[0] + 5, coord[1] + 40, 17, 25)
+      text(inventory[i].moneyValue, coord[0] + 27, coord[1] + 60)
+    }
+  }
+  pop();
 }
 
 function drawStatsPanel() {
