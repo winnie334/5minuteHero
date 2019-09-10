@@ -269,7 +269,7 @@ function drawStatsPanel() {
   fill(0)
   text("Upgrades", 55, 180)
 
-  // FLEXMETER
+  // F L E X M E T E R
   textSize(15)
   fill(255)
   beginShape();
