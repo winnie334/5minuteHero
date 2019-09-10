@@ -4,6 +4,7 @@ function Item(tier, itemImage, startPos) {
     this.startPos = startPos;
     this.curPos = startPos.slice();
     this.isMoving = true;
+    this.endPos = [];
 
     // very advanced algorithms
     //spaghet
@@ -12,7 +13,8 @@ function Item(tier, itemImage, startPos) {
     flexMeter += this.flexValue;
 
     // todo get position in inventory
-    this.endPos = [random(22, 700), random(386, 573)];
+    
+
     this.endSize = 40;
 
     allItems.push(this);

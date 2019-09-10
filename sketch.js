@@ -1,5 +1,5 @@
 /// <reference path="./p5.global-mode.d.ts" />
-var inventory = [null, null, null, null, null, null, null, null, null];
+var inventory = [null, null, null, null, null, null, null, null, null];// temporary size of 9, make 8 in final build
 var upgradeButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
@@ -206,11 +206,11 @@ function drawInventory() {
       fill(198, 116, 21);
 
     } else {
-      fill(rarityColor[inventory[i].tier], rarityColor[inventory[i].tier], rarityColor[inventory[i].tier]);
+      fill(rarityColor[inventory[i].tier]);
      
     }
 
-     rect(40 + 80*(i - 8*(i>=8)), height - 120 - 100*(i>=8), 70, 70);
+     rect(40 + 80*(i - 8*(i>=8)), height - 120 - 100*(i<8), 70, 70);
     pop();
   }
 }
@@ -245,7 +245,7 @@ function drawStatsPanel() {
   fill(0)
   text("Upgrades", 55, 180)
 
-  // FLEXMETER
+  // F L E X M E T E R
   textSize(15)
   fill(255)
   beginShape();

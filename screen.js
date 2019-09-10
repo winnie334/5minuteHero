@@ -98,7 +98,9 @@ function Screen(coords, unlocked, price) {
     this.collect = function() {     
         if (inventory.indexOf(null) != -1) {
             var collectedItem = new Item(this.currentDrop[0], this.currentDrop[1], [coords[0] + coords[2] / 2 - 32, coords[1] + 35])
-            inventory[inventory.indexOf(null)] = collectedItem;
+            ind = inventory.indexOf(null);
+            inventory[ind] = collectedItem;
+            collectedItem.endPos = [43 + 80*(ind - 8*(ind>=8)), height - 117 - 100*(ind<8)];
             this.animationFrame++; 
          } else return;  
     }
