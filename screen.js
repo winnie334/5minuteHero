@@ -24,9 +24,10 @@ function Screen(coords, unlocked, price) {
                 text("Open !", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
             else if (this.animationFrame < waitFrame)
                 text("Opening...", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
-            else if (this.animationFrame == waitFrame)
-                text("Collect", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
-            else if (this.animationFrame >= waitFrame)
+            else if (this.animationFrame == waitFrame) {
+                if (autoSell && this.currentDrop[0] == 0) text("Sell", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
+                else text("Collect", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
+            } else if (this.animationFrame >= waitFrame)
                 text("Closing...", coords[0] + coords[2] / 2, coords[1] + coords[3] - 8)
         } else {
             fill(70);
@@ -80,7 +81,7 @@ function Screen(coords, unlocked, price) {
 
 
             // trust dat dit werkt
-            if (this.animationFrame < unboxFrames) {this.animationFrame += 1 + upgradesBought[0] / 2; if (this.animationFrame > itemShowFrames) this.animationFrame = unboxFrames}
+            if (this.animationFrame < unboxFrames) {this.animationFrame += 1 + upgradesBought[0] / 3; if (this.animationFrame > itemShowFrames) this.animationFrame = unboxFrames}
             else if (this.animationFrame <= itemShowFrames) this.animationFrame = Math.floor(this.animationFrame + 1)
             else if (this.animationFrame == waitFrame) {} // pass
             else if (this.animationFrame < closingFrames) this.animationFrame++;
@@ -95,8 +96,11 @@ function Screen(coords, unlocked, price) {
         this.animationFrame = 1;
     }
 
-    this.collect = function() {     
-        if (inventory.indexOf(null) != -1) {
+    this.collect = function() {   
+        if (autoSell && this.currentDrop[0] == 0) {
+            coins += Math.floor(20 + random(-10, 10));
+            this.animationFrame++;
+        } else if (inventory.indexOf(null) != -1) {
             var collectedItem = new Item(this.currentDrop[0], this.currentDrop[1], [coords[0] + coords[2] / 2 - 32, coords[1] + 35])
             ind = inventory.indexOf(null);
             inventory[ind] = collectedItem;

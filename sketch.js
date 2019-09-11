@@ -5,7 +5,9 @@ var sellButtons = [];
 var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
-var gameState = "playing"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
+var autoSell = false;
+var gameState = "start"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
+var startFrame = 0;
 
 let rpgFont; // onze megacoole totaal niet gestolen font
 let chestImages = [];
@@ -15,7 +17,7 @@ let colorList;
 
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
-var coins = 12003; // todo mss een start amount geven?
+var coins = 4;
 var upgradesBought = [0, 0, 0, 0];
 
 const imageAmounts = [87, 37, 14, 6];
@@ -23,11 +25,12 @@ const rarity = ["common", "uncommon", "rare", "legendary"]
 
 
 function preload() { // we load in all the images before showing the game
-  rpgFont = loadFont('Breathe Fire.otf');
+  rpgFont = loadFont('BreatheFire52.otf');
   coinImage = loadImage("images/coin.png");
 
   upgradeImages.push(loadImage("images/flexM.png"))
   upgradeImages.push(loadImage("images/backpack.png"))
+  upgradeImages.push(loadImage("images/thrash.png"))
 
   for (var i = 0; i < 14; i++) {
     chestImages.push(loadImage("images/chestL/chest"+i+".png"))
@@ -55,6 +58,10 @@ function setup() {
     sellButtons.push(new Button([40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8), 70, 70], [0, 0, 0], [0, 0, 0], sellItem, i))
   }
   textFont(rpgFont);
+  inventory[2] = new Item(0, allImages[0][Math.floor(Math.random()*allImages[0].length)], [203, height - 218])
+  inventory[2].isMoving = false;
+  inventory[6] = new Item(0, allImages[0][Math.floor(Math.random()*allImages[0].length)], [523, height - 218])
+  inventory[6].isMoving = false;
 }
 
 function draw() {
@@ -93,11 +100,12 @@ function drawStart() {
   textAlign(CENTER);
   text("Welcome to 5 minute flexer." , width *0.5, height * 0.3 );
   textSize(25)
-  text("recently your adventuring guild has been increasing its standards for its members.",  width *0.5, (height * 0.3) + 40 );
-  text("Unfortunately you do not meet them so go out into the world and collect loot to fill your flexmeter",  width *0.5, height * 0.3 + 65);
-  text("and collect currency, use this currency on upgrades to aquire loot faster.",  width *0.5, height * 0.3 + 90);
+  text("Recently your adventuring guild has been increasing its standards for its members.",  width *0.5, (height * 0.3) + 40 );
+  text("Unfortunately you do not meet them so you need to collect all kinds of rare and legendary items!",  width *0.5, height * 0.3 + 65);
+  text("This might be the time to open your endless pile of chests you have gathered over the years...", width *0.5, height * 0.3 + 90)
+  text("Sell the trash for upgrades to open your chests even faster!",  width *0.5, height * 0.3 + 115);
   textSize(20);
-  text("-click Anywhere to start-", width *0.5, height * 0.3 + 130);
+  text("-click Anywhere to start-", width *0.5, height * 0.3 + 160);
   pop();
   startGame();
 }
@@ -123,12 +131,13 @@ function drawLose() {
 
 function startGame(){
   if (gameState == "start" && mouseIsPressed){
+    startFrame = frameCount;
     gameState = "playing";
   }
 }
 
 function getDrop() {
-  var yourRNG = Math.random() * 100
+  var yourRNG = Math.random() * 100;
   var tier = 0;
   if (yourRNG < 60) {
     tier = 0;
@@ -144,11 +153,13 @@ function getDrop() {
 }
 
 function sellItem(invIndex) {
-  // todo
+  if (inventory[invIndex] == null) return;
+  inventory[invIndex].sell();
+  inventory[invIndex] = null;
 }
 
 function mousePressed() {
-  for (var button of upgradeButtons) {
+  for (var button of upgradeButtons.concat(sellButtons)) {
    if (button.inside()) button.callFunction()
   }
   for (var screen of screenList) {
@@ -162,24 +173,34 @@ function getUpgradePrice(upgradeNumber) {
     case 0:
       return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
     case 1:
-      if (upgradesBought[1] == 8) return "MAX"
+      if (upgradesBought[1] == 8) return "MAX";
       return Math.floor(60 * Math.pow(1.5, (upgradesBought[1])));
     case 2:
-      return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
+        if (upgradesBought[2] >= 1) return "MAX";
+      return 500;
     case 3:
-      return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
+      return 0;
+      //return Math.floor(20 * Math.pow(1.6, (upgradesBought[0])));
   }
 }
 
 function buyUpgrade(upgradeNumber) {
-  if (getUpgradePrice(upgradeNumber) < coins) {
+  if (getUpgradePrice(upgradeNumber) <= coins) {
     if (upgradeNumber == 1) {
       if (inventory.length >= 16) return;
       inventory.push(null);
-    } 
+    } else if (upgradeNumber == 2 && upgradesBought[2] >= 1) return;
     coins -= getUpgradePrice(upgradeNumber);
     upgradesBought[upgradeNumber]++;
+    if (upgradeNumber == 2) {
+      upgradeButtons.push(new Button([width-100, 455, 80, 30], [200, 200, 200], [100, 100, 100], switchAutoSell, null))
+      autoSell = true;
+    }
   }
+}
+
+function switchAutoSell() {
+  autoSell = !autoSell;
 }
 
 function drawBackground() {
@@ -187,7 +208,6 @@ function drawBackground() {
   fill(191, 211, 255) // Dit is onze background nu
   strokeWeight(3);
   rect(1, 1, width-253, height-3)
-  
 }
 
 function drawButtons() {
@@ -219,8 +239,14 @@ function drawInventory() {
   text("INVENTORY", 284, 365)
   for (var i = 0; i < inventory.length; i++) {
     coord = [40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8)]
-    if (inventory[i] == null) fill(198, 116, 21);
-    else fill(rarityColor[inventory[i].tier]);
+    strokeWeight(5)
+    if (inventory[i] == null) {
+      fill(198, 116, 21);
+      stroke(143, 85, 20)
+    } else {
+      fill(rarityColor[inventory[i].tier]);
+      stroke(rarityColor[inventory[i].tier].levels[0]*0.4, rarityColor[inventory[i].tier].levels[1]*0.4, rarityColor[inventory[i].tier].levels[2]*0.4)
+    }
     rect(coord[0], coord[1], 70, 70)
   }
 
@@ -231,6 +257,7 @@ function drawInventory() {
   for (var i = 0; i < inventory.length; i++) {
     coord = [40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8)]
     if (sellButtons[i].inside() && inventory[i] != null) {
+      noStroke();
       fill(0, 0, 0, 120);
       rect(coord[0], coord[1], 70, 70)
       fill(255)
@@ -252,11 +279,11 @@ function drawStatsPanel() {
   rect(0, 1, 247, 140);
   fill(0);
   textSize(30);
-  var secondsLeft = Math.floor((18000-frameCount)/60)
-  text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 10, 30)
+  var secondsLeft = Math.floor((18060-(frameCount-startFrame))/60)
+  text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 15, 33)
   textSize(15)
-  text("before you're kicked", 72, 15)
-  text("out of the guild", 72, 30)
+  text("before you're kicked", 77, 19)
+  text("out of the guild", 77, 34)
 
   fill(198, 116, 21)
   strokeWeight(0);
@@ -307,17 +334,20 @@ function drawUpgrades() {
   translate(width-247, 201)
 
   for (var i = 0; i < upgradeImages.length; i++) {
-    fill(240);
+    fill(200);
     stroke(100, 60, 20);
     strokeWeight(5);
     rect(10, 10 + 100*i, 73, 73)
 
     fill(0);
     noStroke();
-    image(coinImage, 90, 54+100*i, 24, 30)
     textSize(25)
-    text(getUpgradePrice(i), 120, 77+100*i)
+    if (!(i == 2 && upgradesBought[2] >= 1)) {
+      image(coinImage, 90, 54+100*i, 24, 30)
+      text(getUpgradePrice(i), 120, 77+100*i)
+    }
     textSize(21)
+    if (i != 2)
     text("Lv. " + upgradesBought[i], 236-textWidth("Lv. " + upgradesBought[i]), 77+100*i)
   }
 
@@ -336,5 +366,20 @@ function drawUpgrades() {
   text("Expand backpack", 90, 25)
   text("to keep more items!", 90, 45)
 
+  // trashSell
+  translate(0, 100);
+  image(upgradeImages[2], 13, 15, 40, 64)
+  image(coinImage, 55, 47, 24, 30)
+  image(coinImage, 55, 17, 24, 30)
+  fill(0);
+  noStroke();
+  textSize(20)
+  text("Automatically", 90, 25)
+  text("sell white items !", 90, 45)
+  if (upgradesBought[2] >= 1) {
+    textSize(25)
+    text(autoSell ? "ON" : "OFF", 93, 77)
+    text("Toggle", 153, 77)
+  }
   pop();
 }

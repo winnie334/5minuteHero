@@ -10,7 +10,7 @@ function Item(tier, itemImage, startPos) {
     //spaghet
     this.moneyValue = Math.floor(10*Math.floor(random(Math.pow(2, this.tier), Math.pow(3, this.tier))+random(Math.pow(2, this.tier), Math.pow(3, this.tier))) + random(-10, 10))
     if (this.moneyValue >= 999) this.moneyValue = 999;
-    this.flexValue = Math.pow(2, this.tier);
+    this.flexValue = 2 * Math.pow(2, this.tier);
     flexMeter += this.flexValue;
 
     // todo get position in inventory
@@ -28,7 +28,7 @@ function Item(tier, itemImage, startPos) {
     }
 
     this.sell = function() {
-        // todo remove self from inv list
+        flexMeter -= this.flexValue;
         coins += this.moneyValue;
     }
 }
