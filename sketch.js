@@ -19,6 +19,7 @@ let upgradeImages = [];
 let colorList;
 let loseBg;
 let victoryBg;
+let bgSound;
 
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
@@ -37,7 +38,10 @@ function preload() { // we load in all the images before showing the game
   coinImage = loadImage("images/coin.png");
 
   loseBg = loadImage("images/Background.png");
-  victoryBg = loadImage("images/victoryBG.png")
+  victoryBg = loadImage("images/victoryBG.png");
+
+  soundFormats('mp3');
+  bgSound = loadSound("sounds/grasslands.mp3");
 
   upgradeImages.push(loadImage("images/flexM.png"))
   upgradeImages.push(loadImage("images/backpack.png"))
@@ -63,7 +67,8 @@ function setup() {
     upgradeButtons.push(new Button([width-249, 198+100*i, 247, 100], [224, 139, 41], [143, 85, 20], buyUpgrade, i))
     screenList.push(new Screen([20 + 180*i, 30, 150, 300], i == 0, 50 * Math.pow(2, i)))
   }
-
+  bgSound.setVolume(0.1);
+  bgSound.loop();
   for (var i = 0; i < 16; i++) {
     // todo laat coords matchen met 64x64 inventory
     sellButtons.push(new Button([40 + 80*(i - 8*(i>=8)), height - 220 + 100*(i>=8), 70, 70], [0, 0, 0], [0, 0, 0], sellItem, i))
@@ -140,6 +145,7 @@ function fixPointer() {
 }
 
 function drawStart() {
+
   push();
   //image(loseBg, 0, 0, 1000, 600);
   image(loseBg, -frameCount % width, 0, width, height);
