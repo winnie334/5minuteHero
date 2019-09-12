@@ -22,6 +22,9 @@ let victoryBg;
 var flexMeter = 0; // max of 100%
 var coins = 4;
 var upgradesBought = [0, 0, 0, 0];
+var boxesOpened = 0;
+var raritiesFound = [0, 0, 0, 0];
+var totalMoneyCollected = 4;
 
 const imageAmounts = [87, 37, 14, 6];
 const rarity = ["common", "uncommon", "rare", "legendary"]
@@ -71,6 +74,7 @@ function setup() {
 }
 
 function draw() {
+  changeGameState();
   switch (gameState) {
     case "start":
       drawStart();
@@ -91,6 +95,32 @@ function draw() {
       break;
   }
 
+}
+
+function changeGameState() {
+  switch (gameState) {
+    case "start":
+      if (mouseIsPressed) {
+        gameState = "playing";
+        startFrame = frameCount;
+      }
+      break;
+
+    case "playing":
+      if (flexMeter >= 98) {
+        gameState = "win";
+        endFrame = frameCount;
+      } else if (Math.floor((18060-(endFrame-startFrame))/60) < 0) {
+        gameState = "lose"
+      }
+      break;
+
+    case "win":
+      break;
+
+    case "lose":
+      break;
+  }
 }
 
 function fixPointer() {
@@ -115,12 +145,11 @@ function drawStart() {
   textSize(26)
   text("Your favorite adventuring guild is looking for new members - and you want in !",  width *0.5-10, (height * 0.3) + 40 );
   text("However, they only want the coolest adventurers, those with rare and legendary items!",  width *0.5-10, height * 0.3 + 68);
-  text("This might be the time to open your endless pile of chests you have gathered over the years...", width *0.5-10, height * 0.3 + 96)
+  text("This might be the time to open the endless pile of chests you have gathered over the years...", width *0.5-10, height * 0.3 + 96)
   text("Collect rare items to flex with and sell the rest for upgrades!",  width *0.5-10, height * 0.3 + 124);
   textSize(20);
   text("-click anywhere to start-", width *0.5, height * 0.75);
   pop();
-  startGame();
 }
 
 function drawGame() {
@@ -150,11 +179,30 @@ function drawWin() {
   fill(196, 157, 27);
   stroke(0);
   strokeWeight(5)
-  text("CONGRATULATIONS !", 500, 130)
+  textAlign(CENTER)
+  text("CONGRATULATIONS !", 700, 130)
   fill(0);
   noStroke();
   textSize(25);
-  text("You managed to collect enough rare items ")
+  text("You managed to collect enough rare items in time", 700, 200)
+  text("and were recruited succesfully into the guild.", 700, 230)
+  text("Thanks for playing!", 700, 290)
+
+  var secondsLeft = Math.floor((18060-(endFrame-startFrame))/60)
+  text("Time left - " + Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 700, 380)
+  text("Chests opened - " + boxesOpened, 700, 410);
+  text("Total money collected - " + totalMoneyCollected, 700, 440)
+
+  stroke(0);
+  strokeWeight(1)
+  fill(rarityColor[0])
+  text("Common items found - " + raritiesFound[0], 700, 470)
+  fill(rarityColor[1])
+  text("Uncommon items found - " + raritiesFound[1], 700, 500)
+  fill(rarityColor[2])
+  text("Rare items found - " + raritiesFound[2], 700, 530)
+  fill(rarityColor[3])
+  text("Legendary items found - " + raritiesFound[3], 700, 560)
 }
 
 function drawLose() {
@@ -179,12 +227,6 @@ function drawLose() {
 
 }
 
-function startGame(){
-  if (gameState == "start" && mouseIsPressed){
-    startFrame = frameCount;
-    gameState = "playing";
-  }
-}
 
 function getDrop() {
   var yourRNG = Math.random() * 100;
@@ -334,7 +376,6 @@ function drawStatsPanel() {
   text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 15, 33)
   textSize(22)
   text("before sign-ups end", 82, 28)
-  //text("out of the guild", 77, 34)
 
   fill(198, 116, 21)
   strokeWeight(0);

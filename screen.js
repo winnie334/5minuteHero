@@ -94,11 +94,15 @@ function Screen(coords, unlocked, price) {
     this.unbox = function() {
         this.currentDrop = getDrop();
         this.animationFrame = 1;
+        boxesOpened++;
     }
 
-    this.collect = function() {   
+    this.collect = function() {
+        raritiesFound[this.currentDrop[0]]++;   
         if (autoSell && this.currentDrop[0] == 0) {
-            coins += Math.floor(20 + random(-10, 10));
+            var moneyz = Math.floor(20 + random(-10, 10))
+            coins += moneyz;
+            totalMoneyCollected += moneyz;
             this.animationFrame++;
         } else if (inventory.indexOf(null) != -1) {
             var collectedItem = new Item(this.currentDrop[0], this.currentDrop[1], [coords[0] + coords[2] / 2 - 32, coords[1] + 35])

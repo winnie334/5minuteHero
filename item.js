@@ -30,5 +30,6 @@ function Item(tier, itemImage, startPos) {
     this.sell = function() {
         flexMeter -= this.flexValue;
         coins += this.moneyValue;
+        totalMoneyCollected += this.moneyValue;
     }
 }
