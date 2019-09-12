@@ -6,8 +6,9 @@ var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
 var autoSell = false;
-var gameState = "lose"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
+var gameState = "start"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
 var startFrame = 0;
+var endFrame = 0;
 
 let rpgFont; // onze megacoole totaal niet gestolen font
 let chestImages = [];
@@ -15,6 +16,7 @@ let coinImage;
 let upgradeImages = [];
 let colorList;
 let loseBg;
+let victoryBg;
 
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
@@ -30,6 +32,7 @@ function preload() { // we load in all the images before showing the game
   coinImage = loadImage("images/coin.png");
 
   loseBg = loadImage("images/Background.png");
+  victoryBg = loadImage("images/victoryBG.png")
 
   upgradeImages.push(loadImage("images/flexM.png"))
   upgradeImages.push(loadImage("images/backpack.png"))
@@ -97,23 +100,25 @@ function fixPointer() {
 
 function drawStart() {
   push();
-  image(loseBg, 0, 0, 1000, 600);
+  //image(loseBg, 0, 0, 1000, 600);
+  image(loseBg, -frameCount % width, 0, width, height);
+  image(loseBg, -frameCount % width + width, 0, width, height);
   textSize(50);
   textAlign(CENTER);
   stroke(0, 0, 0);
   fill(196, 157, 27);
   strokeWeight(5);
-  text("Welcome to Five Minute Flexer", width *0.5, height * 0.2 + 28 * sin(frameCount/150));
+  text("Welcome to Five Minute Flexer", width *0.5, height * 0.18 + 23 * sin(frameCount/60));
   fill(255, 255, 255);
   stroke(0, 0, 0);
   strokeWeight(3);
-  textSize(25)
-  text("Recently your adventuring guild has been increasing its standards for its members.",  width *0.5, (height * 0.3) + 40 );
-  text("Unfortunately you do not meet them so you need to collect all kinds of rare and legendary items!",  width *0.5, height * 0.3 + 65);
-  text("This might be the time to open your endless pile of chests you have gathered over the years...", width *0.5, height * 0.3 + 90)
-  text("Sell the trash for upgrades to open your chests even faster!",  width *0.5, height * 0.3 + 115);
+  textSize(26)
+  text("Your favorite adventuring guild is looking for new members - and you want in !",  width *0.5-10, (height * 0.3) + 40 );
+  text("However, they only want the coolest adventurers, those with rare and legendary items!",  width *0.5-10, height * 0.3 + 68);
+  text("This might be the time to open your endless pile of chests you have gathered over the years...", width *0.5-10, height * 0.3 + 96)
+  text("Collect rare items to flex with and sell the rest for upgrades!",  width *0.5-10, height * 0.3 + 124);
   textSize(20);
-  text("-click Anywhere to start-", width *0.5, height * 0.75);
+  text("-click anywhere to start-", width *0.5, height * 0.75);
   pop();
   startGame();
 }
@@ -130,21 +135,45 @@ function drawGame() {
 }
 
 function drawWin() {
-
+  imageMode(CORNER)
+  image(victoryBg, 0, 0)
+  var coolItems = [];
+  for  (var i = 0; i < inventory.length; i++) {
+    if (inventory[i] != null )//&& inventory[i].tier >= 2)
+      coolItems.push(inventory[i]);
+  }
+  imageMode(CENTER)
+  for (var i = 0; i < coolItems.length; i++) {
+    image(coolItems[i].itemImage, 284 + 140*cos(frameCount/100 + i*2*Math.PI/coolItems.length), 170 + 140*sin(frameCount/100 + i*2*Math.PI/coolItems.length))
+  }
+  textSize(50);
+  fill(196, 157, 27);
+  stroke(0);
+  strokeWeight(5)
+  text("CONGRATULATIONS !", 500, 130)
+  fill(0);
+  noStroke();
+  textSize(25);
+  text("You managed to collect enough rare items ")
 }
 
 function drawLose() {
   push();
-  image(loseBg, 0, 0, 1000, 600);
-  fill(255,255,255);
-  stroke(0,0,0);
+  image(loseBg, -frameCount % width, 0, width, height);
+  image(loseBg, -frameCount % width + width, 0, width, height);
   textSize(40);
   textAlign(CENTER);
-  text("You Lose" , width *0.5, height * 0.35 );
+  stroke(0);
+  fill(196, 157, 27);
+  strokeWeight(5);
+  text("Game Over" , width *0.5, height * 0.18);
   textSize(25)
-  text("You didn't manage to upgrade your gear fast enough and have been kicked out of the guild.",  width *0.5, (height * 0.35) + 40 );
-  text("Try to keep purple and yellow items they contribute alot to the flexmeter" ,  width *0.5, height * 0.35 + 65);
-  text("-Press F5 to restart-", width *0.5, height * 0.35 + 90)
+  strokeWeight(1);
+  fill(255);
+  text("You didn't manage to collect enough rare items to flex with,",  width *0.5, (height * 0.35) + 32 );
+  text("so you were not invited to the guild. Perhaps another time...",  width *0.5, (height * 0.35) + 52 );
+  text("Tip: Try to keep purple and yellow items, they contribute a lot to the flexmeter.",  width *0.5, height * 0.35 + 95);
+  text("-Refresh (F5) to restart-", width *0.5, height * 0.75)
 
   textSize(25)
 
@@ -229,6 +258,7 @@ function drawBackground() {
   fill(191, 211, 255) // Dit is onze background nu
   strokeWeight(3);
   rect(1, 1, width-253, height-3)
+  //image(loseBg, 0, -100, loseBg.width, loseBg.height - 80)
 }
 
 function drawButtons() {
@@ -302,9 +332,9 @@ function drawStatsPanel() {
   textSize(30);
   var secondsLeft = Math.floor((18060-(frameCount-startFrame))/60)
   text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 15, 33)
-  textSize(15)
-  text("before you're kicked", 77, 19)
-  text("out of the guild", 77, 34)
+  textSize(22)
+  text("before sign-ups end", 82, 28)
+  //text("out of the guild", 77, 34)
 
   fill(198, 116, 21)
   strokeWeight(0);
