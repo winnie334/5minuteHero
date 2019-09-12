@@ -6,7 +6,7 @@ var screenList = [];
 var allImages = []; // array of array containing all the pictures by rarity
 var currentlyOnButton = false; // set to true to change pointer
 var autoSell = false;
-var gameState = "start"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
+var gameState = "lose"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
 var startFrame = 0;
 
 let rpgFont; // onze megacoole totaal niet gestolen font
@@ -14,6 +14,7 @@ let chestImages = [];
 let coinImage;
 let upgradeImages = [];
 let colorList;
+let loseBg;
 
 // globale variables voor vanalles hieronder
 var flexMeter = 0; // max of 100%
@@ -27,6 +28,8 @@ const rarity = ["common", "uncommon", "rare", "legendary"]
 function preload() { // we load in all the images before showing the game
   rpgFont = loadFont('BreatheFire52.otf');
   coinImage = loadImage("images/coin.png");
+
+  loseBg = loadImage("images/Background.png");
 
   upgradeImages.push(loadImage("images/flexM.png"))
   upgradeImages.push(loadImage("images/backpack.png"))
@@ -94,18 +97,23 @@ function fixPointer() {
 
 function drawStart() {
   push();
-  noStroke();
-  background(177, 179, 177);
-  textSize(40);
+  image(loseBg, 0, 0, 1000, 600);
+  textSize(50);
   textAlign(CENTER);
-  text("Welcome to 5 minute flexer." , width *0.5, height * 0.3 );
+  stroke(0, 0, 0);
+  fill(196, 157, 27);
+  strokeWeight(5);
+  text("Welcome to Five Minute Flexer", width *0.5, height * 0.2 + 28 * sin(frameCount/150));
+  fill(255, 255, 255);
+  stroke(0, 0, 0);
+  strokeWeight(3);
   textSize(25)
   text("Recently your adventuring guild has been increasing its standards for its members.",  width *0.5, (height * 0.3) + 40 );
   text("Unfortunately you do not meet them so you need to collect all kinds of rare and legendary items!",  width *0.5, height * 0.3 + 65);
   text("This might be the time to open your endless pile of chests you have gathered over the years...", width *0.5, height * 0.3 + 90)
   text("Sell the trash for upgrades to open your chests even faster!",  width *0.5, height * 0.3 + 115);
   textSize(20);
-  text("-click Anywhere to start-", width *0.5, height * 0.3 + 160);
+  text("-click Anywhere to start-", width *0.5, height * 0.75);
   pop();
   startGame();
 }
@@ -126,6 +134,19 @@ function drawWin() {
 }
 
 function drawLose() {
+  push();
+  image(loseBg, 0, 0, 1000, 600);
+  fill(255,255,255);
+  stroke(0,0,0);
+  textSize(40);
+  textAlign(CENTER);
+  text("You Lose" , width *0.5, height * 0.35 );
+  textSize(25)
+  text("You didn't manage to upgrade your gear fast enough and have been kicked out of the guild.",  width *0.5, (height * 0.35) + 40 );
+  text("Try to keep purple and yellow items they contribute alot to the flexmeter" ,  width *0.5, height * 0.35 + 65);
+  text("-Press F5 to restart-", width *0.5, height * 0.35 + 90)
+
+  textSize(25)
 
 }
 
