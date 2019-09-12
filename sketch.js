@@ -283,6 +283,7 @@ function drawTutorial() {
 }
 
 function drawGame() {
+  fixSound();
   drawBackground();
   drawScreens();
   drawStatsPanel();
@@ -356,9 +357,18 @@ function drawLose() {
 
 }
 
+function fixSound() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
+
 
 function getDrop() {
   var yourRNG = Math.random() * 100;
+  if (Math.floor((18060-(frameCount-startFrame))/60) < 40) yourRNG += 10;
+  if (Math.floor((18060-(frameCount-startFrame))/60) < 20) yourRNG += 10;
+  if (Math.floor((18060-(frameCount-startFrame))/60) < 10) yourRNG += 10;
   var tier = 0;
   if (yourRNG < 60) {
     tier = 0;
