@@ -9,6 +9,8 @@ var autoSell = false;
 var gameState = "start"; // set to start to display start screen, playing for game, and win or lose //todo verander naar start bij release
 var startFrame = 0;
 var endFrame = 0;
+var clickDelay = 0;
+var tutorialFrame = 0;
 
 let rpgFont; // onze megacoole totaal niet gestolen font
 let chestImages = [];
@@ -78,8 +80,10 @@ function draw() {
   switch (gameState) {
     case "start":
       drawStart();
-     // gameState = "playing";
+      break;
 
+    case "tutorial":
+      drawTutorial();
       break;
 
     case "playing":
@@ -101,6 +105,13 @@ function changeGameState() {
   switch (gameState) {
     case "start":
       if (mouseIsPressed) {
+        gameState = "tutorial";
+        clickDelay = frameCount;
+      }
+      break;
+
+    case "tutorial":
+      if (mouseIsPressed && tutorialFrame == 7) {
         gameState = "playing";
         startFrame = frameCount;
       }
@@ -110,8 +121,8 @@ function changeGameState() {
       if (flexMeter >= 98) {
         gameState = "win";
         endFrame = frameCount;
-      } else if (Math.floor((18060-(endFrame-startFrame))/60) < 0) {
-        gameState = "lose"
+      } else if (Math.floor((18060-(frameCount-startFrame))/60) < 0) {
+        gameState = "lose";
       }
       break;
 
@@ -144,11 +155,124 @@ function drawStart() {
   strokeWeight(3);
   textSize(26)
   text("Your favorite adventuring guild is looking for new members - and you want in !",  width *0.5-10, (height * 0.3) + 40 );
-  text("However, they only want the coolest adventurers, those with rare and legendary items!",  width *0.5-10, height * 0.3 + 68);
+  text("However, they only want the coolest heroes, those with rare and legendary items!",  width *0.5-10, height * 0.3 + 68);
   text("This might be the time to open the endless pile of chests you have gathered over the years...", width *0.5-10, height * 0.3 + 96)
   text("Collect rare items to flex with and sell the rest for upgrades!",  width *0.5-10, height * 0.3 + 124);
   textSize(20);
   text("-click anywhere to start-", width *0.5, height * 0.75);
+  pop();
+}
+
+function drawTutorial() {
+  push();
+  drawGame();
+  noStroke();
+  textAlign(CENTER)
+  switch (tutorialFrame) {
+    case 0:
+      fill(0, 0, 0, 200);
+      rect(0, 0, width, height);
+      fill(255);
+      textSize(25)
+      text("Before we start, a quick tutorial", 1/2*width - 10, 100)
+      text("(It's really short i promise)", 1/2*width - 10, 140)
+      break;
+    
+      case 1:
+        fill(0, 0, 0, 200);
+        rect(0, 0, 750, height);
+        rect(750, 140, 250, height-140)
+        fill(255);
+        textSize(25)
+        textAlign(RIGHT)
+        text("This is the info panel.", 730, 40)
+        text("It shows the time you have left, as well as your money.", 730, 80)
+        text("Your goal is to fill the                    before time runs out.", 730, 120)
+        fill(196, 157, 27);
+        text("Flexmeter", 525, 120)
+        break;
+
+      case 2:
+        fill(0, 0, 0, 200);
+        rect(0, 0, width, 333);
+        rect(750, 333, 250, height-333)
+        rect(0, 500, 750, height-500)
+        fill(255);
+        textSize(25)
+        textAlign(CENTER)
+        text("To fill your                  , you need to collect items.", 360, 260)
+        text("Every item fills it a bit. Items can also be sold for coins.", 350, 300)
+        fill(196, 157, 27);
+        text("Flexmeter", 297, 260)
+        break;
+
+      case 3:
+        fill(0, 0, 0, 200);
+        rect(0, 0, width, 333);
+        rect(750, 333, 250, height-333)
+        rect(0, 500, 750, height-500)
+        fill(255);
+        textSize(25)
+        textAlign(CENTER)
+        text("Not all items are equal! Some are rarer than others.", 1/2*width - 10, 40)
+        text("Right now you only have items of the \"Common\" tier.", 1/2*width - 10, 80)
+        text("Items of a higher tier are worth more gold, but also fill the                  a LOT more.", 1/2*width - 10, 120)
+        text("It is up to you to decide whether to keep or sell rare items.", 1/2*width - 10, 160)
+        fill(196, 157, 27);
+        text("Flexmeter", 728, 120)
+        fill(255)
+        text("The tiers are: ", 300, 200)
+
+        fill(rarityColor[0])
+        text("Common", 470, 200)
+        fill(rarityColor[1])
+        text("Uncommon", 470, 230)
+        fill(rarityColor[2])
+        text("Rare", 470, 260)
+        fill(rarityColor[3])
+        text("Legendary", 470, 290)
+        break;
+
+      case 4:
+        fill(0, 0, 0, 200);
+        rect(0, 339, 750, height-339);
+        rect(750, 0, 250, height)
+        fill(255);
+        textSize(25)
+        textAlign(CENTER)
+        text("Tutorial is almost over, I promise!", 350, 369)
+        text("To get items, you open chests. It is completely free,", 350, 409)
+        text("so try to open as many chests as you can!", 350, 449)
+        break;
+
+      case 5:
+        fill(0, 0, 0, 200);
+        rect(0, 0, 750, height);
+        rect(750, 0, 250, 140)
+        fill(255);
+        textSize(25)
+        textAlign(RIGHT)
+        text("Finally, you can buy upgrades to help you reach your goal.", 730, 230)
+        text("They are quite useful so don't hesitate to sell off common items!", 722, 270)
+        break;
+
+      case 6:
+        fill(0, 0, 0, 200);
+        rect(0, 0, width, height);
+        fill(255);
+        textSize(25)
+        text("That's all for this tutorial!", 1/2*width - 10, 100)
+        text("Hopefully it helped, and good luck!", 1/2*width - 10, 140)
+        break;
+
+
+  }
+  fill(255);
+  textSize(25);
+  textAlign(CENTER)
+  if (tutorialFrame == 6) text("-Click to start-", 1/2*width-10, 550)
+  else text("-Click to continue-", 1/2*width-10, 550)
+  document.body.style.cursor = 'default'
   pop();
 }
 
@@ -160,7 +284,6 @@ function drawGame() {
   drawInventory();
   drawUpgrades();
   fixPointer();
- 
 }
 
 function drawWin() {
@@ -251,6 +374,7 @@ function sellItem(invIndex) {
 }
 
 function mousePressed() {
+  if (gameState == "tutorial") {tutorialFrame++; return}
   for (var button of upgradeButtons.concat(sellButtons)) {
    if (button.inside()) button.callFunction()
   }
@@ -372,7 +496,8 @@ function drawStatsPanel() {
   rect(0, 1, 247, 140);
   fill(0);
   textSize(30);
-  var secondsLeft = Math.floor((18060-(frameCount-startFrame))/60)
+  if (gameState == "playing") var secondsLeft = Math.floor((18060-(frameCount-startFrame))/60)
+  else var secondsLeft = 300
   text(Math.floor(secondsLeft/60) + ":" + (secondsLeft % 60 < 10 ? "0" : "") + secondsLeft % 60, 15, 33)
   textSize(22)
   text("before sign-ups end", 82, 28)
